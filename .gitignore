@@ -1,0 +1,61 @@
+# Visual Studio generated files
+.vs/
+*.csproj.user
+*.suo
+*.sln.docstates
+*.testsettings
+*.runsettings
+*.pfx
+*.cer
+*.vspscc
+*_i.h
+*_p.c
+*.ilk
+*.log
+*.obj
+*.pch
+*.tlog
+*.tmp
+*.rsp
+*.shproj
+*.userprefs
+*.vcxproj.user
+$(SolutionDir)/.vs/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+out/
+bin/
+obj/
+publish/
+_PublishedWebsites/
+
+# ASP.NET temporary files
+/Content/themes/base/
+/App_Data/
+/Profile/
+
+# IIS Express files
+iisexpress/
+
+# NuGet cache
+packages/
+
+# Npm and Yarn artifacts
+node_modules/
+yarn.lock
+
+# Bower packages
+bower_components/
+
+# Tools
+Web.config
+appsettings.Development.json
+appsettings.Production.json
+*.swp        # Swap files
+*.bak        # Backup files
+*.tmp        # Temporary files
+
+# Visual Studio code specific
+.vscode/

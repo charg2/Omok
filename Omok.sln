@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36025.13 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameServer", "GameServer\GameServer.csproj", "{915461C9-9B90-40C8-9184-4E19B9B6CBEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiveServer", "HiveServer\HiveServer.csproj", "{537FE4F9-A589-47AD-9C9B-4ECCFA3E5E76}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{B5525540-8446-4C0F-8699-C2B700949822}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{915461C9-9B90-40C8-9184-4E19B9B6CBEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{915461C9-9B90-40C8-9184-4E19B9B6CBEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{915461C9-9B90-40C8-9184-4E19B9B6CBEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{915461C9-9B90-40C8-9184-4E19B9B6CBEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{537FE4F9-A589-47AD-9C9B-4ECCFA3E5E76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{537FE4F9-A589-47AD-9C9B-4ECCFA3E5E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{537FE4F9-A589-47AD-9C9B-4ECCFA3E5E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{537FE4F9-A589-47AD-9C9B-4ECCFA3E5E76}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {953890FF-7E3A-47B4-B5C3-EE82322F6E7C}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared\Shared.projitems*{537fe4f9-a589-47ad-9c9b-4eccfa3e5e76}*SharedItemsImports = 5
+		Shared\Shared.projitems*{915461c9-9b90-40c8-9184-4e19b9b6cbef}*SharedItemsImports = 5
+		Shared\Shared.projitems*{b5525540-8446-4c0f-8699-c2b700949822}*SharedItemsImports = 13
+	EndGlobalSection
+EndGlobal

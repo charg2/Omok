@@ -1,0 +1,29 @@
+@HiveServer_HostAddress_Auth    = http://localhost:5071/api/auth
+@HiveServer_HostAddress_Account = http://localhost:5071/api/account
+
+POST {{HiveServer_HostAddress_Account}}/register/
+Content-Type: application/json
+
+{
+  "Id":"mlxg",
+  "Pw":"mlt"
+}
+
+###
+POST {{HiveServer_HostAddress_Account}}/login/
+Content-Type: application/json
+
+{
+  "Id":"mlxg",
+  "Pw":"mlt"
+}
+
+###
+POST {{HiveServer_HostAddress_Auth}}/verify_token/
+Content-Type: application/json
+
+{
+  "Id":"mlxg",
+  "Pw":"mlt",
+  "Token":"1234567890"
+}
