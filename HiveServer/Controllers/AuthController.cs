@@ -20,16 +20,30 @@ public class AuthController : ControllerBase
     [HttpPost( "verify_token" )]
     public async Task< VerifyTokenRes > VeirifyToken( [FromBody] VerifyTokenReq request )
     {
-        var verifyResult = await _authService.VerifyToken( request.UserId, request.Password, request.Token );
+        var verifyResult = await _authService.VerifyToken( request.UserId, request.Token );
 
         _logger.LogInformation( $"Verifying token for user {request.UserId}" );
 
         return new()
         {
             UserId   = request.UserId,
-            Password = request.Password,
-            //Token    = request.Token,
+            Token    = request.Token,
+            Error    = verifyResult,
         };
     }
+
+    //[HttpPost( "refresh_token" )]
+    //public async Task< VerifyTokenRes > RefreshToken( [FromBody] VerifyTokenReq request )
+    //{
+    //    var verifyResult = await _authService.VerifyToken( request.UserId, request.Token );
+
+    //    _logger.LogInformation( $"Verifying token for user {request.UserId}" );
+
+    //    return new()
+    //    {
+    //        UserId = request.UserId,
+    //        Token  = request.Token,
+    //    };
+    //}
 
 }

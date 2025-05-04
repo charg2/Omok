@@ -5,8 +5,8 @@ POST {{HiveServer_HostAddress_Account}}/register/
 Content-Type: application/json
 
 {
-  "Id":"mlxg",
-  "Pw":"mlt"
+  "UserId":"mlxg",
+  "Password":"mlt"
 }
 
 ###

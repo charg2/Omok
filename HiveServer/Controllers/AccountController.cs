@@ -23,32 +23,31 @@ public class AccountController : ControllerBase
     [HttpPost( "register" )]
     public async Task< RegisterRes > Register( [FromBody] RegisterReq request )
     {
-        var registerResult = await _accountService.Register( request.UserId, request.Password );
+        var createResult = await _accountService.RegisterAccount( request.UserId, request.Password );
 
-        _logger.LogInformation( $"Register result: {registerResult}" );
+        _logger.LogInformation( $"Create result: {createResult}" );
 
-        return new RegisterRes
+        return new()
         {
             UserId   = request.UserId,
             Password = request.Password,
-            Token    = string.Empty,
-            Error    = registerResult
+            Error    = createResult
         };
     }
 
     [HttpPost( "login" )]
     public async Task< LoginRes > Login( [FromBody] LoginReq request )
     {
-        var loginResult = await _accountService.Login( request.UserId, request.Password );
+        var ( validateResult, token )  = await _accountService.VaerifyAccount( request.UserId, request.Password );
 
-        _logger.LogInformation( $"Login result: {loginResult}" );
+        _logger.LogInformation( $"Login result: {validateResult}" );
 
-        return new LoginRes
+        return new()
         {
             UserId   = request.UserId,
             Password = request.Password,
-            Token    = string.Empty,
-            Error    = loginResult
+            Token    = token,
+            Error    = validateResult
         };
     }
 }

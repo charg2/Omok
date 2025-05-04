@@ -4,6 +4,6 @@ namespace HiveServer.Services.Interface;
 
 public interface IAuthService
 {
-    public Task< ErrorCode > VerifyToken( string userId, string password, string token );
+    public Task< ErrorCode > VerifyToken( string userId, string token );
 
 }
