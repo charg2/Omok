@@ -1,29 +1,30 @@
+@HiveServer_HostAddress         = http://localhost:5071/api
 @HiveServer_HostAddress_Auth    = http://localhost:5071/api/auth
 @HiveServer_HostAddress_Account = http://localhost:5071/api/account
 
-POST {{HiveServer_HostAddress_Account}}/register/
+### 가입
+POST {{HiveServer_HostAddress}}/register/
 Content-Type: application/json
 
 {
-  "UserId":"mlxg",
+  "Account":"mlxg",
   "Password":"mlt"
 }
 
-###
-POST {{HiveServer_HostAddress_Account}}/login/
+### 로그인
+POST {{HiveServer_HostAddress}}/login/
 Content-Type: application/json
 
 {
-  "Id":"mlxg",
-  "Pw":"mlt"
+  "Account":"mlxg",
+  "Password":"mlt"
 }
 
-###
-POST {{HiveServer_HostAddress_Auth}}/verify_token/
+### 토큰 인증
+POST {{HiveServer_HostAddress}}/verify_token/
 Content-Type: application/json
 
 {
-  "Id":"mlxg",
-  "Pw":"mlt",
+  "Account":"mlxg",
   "Token":"1234567890"
 }

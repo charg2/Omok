@@ -11,7 +11,7 @@ builder.Services.Configure< DBConfig >( configuration.GetSection( nameof( DBConf
 builder.Services.AddControllers();
 builder.Services.AddTransient< IHiveDB, HiveDB >();
 builder.Services.AddTransient< IAuthService, AuthService >();
-builder.Services.AddTransient< IAccountService, AccountService >();
+builder.Services.AddTransient< IUserService, UserService >();
 
 // 기본 로거 설정 제외
 builder.Logging.ClearProviders();

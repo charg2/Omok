@@ -16,14 +16,14 @@ public class AuthService : IAuthService
         _logger = logger;
     }
 
-    public async Task< ErrorCode > VerifyToken( string userId, string token )
+    public async Task< ErrorCode > VerifyToken( string account, string token )
     {
         try
         {
-            var result = await _hiveDB.VerifyToken( userId, token );
+            var result = await _hiveDB.VerifyToken( account, token );
             if ( result != ErrorCode.None )
             {
-                _logger.LogWarning( "Token verification failed for user {UserId}: {ErrorCode}", userId, result );
+                _logger.LogWarning( $"Token verification failed for user {account}: {result}" );
                 return result;
             }
 
@@ -31,7 +31,7 @@ public class AuthService : IAuthService
         }
         catch ( Exception ex )
         {
-            _logger.LogError( ex, "Error creating account for user {UserId}", userId );
+            _logger.LogError( ex, $"Error creating account for user {account}" );
             return ErrorCode.HiveVerifyTokenExecptionOccur;
         }
     }

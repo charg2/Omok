@@ -22,3 +22,9 @@ public enum ErrorCode
     HiveLoginCreateTokenFail,
     HiveLoginCreateAccountFail,
 }
+
+public static class ErrorCodeEx
+{
+    public static bool HasError( ref this ErrorCode errorCode )
+        => errorCode != ErrorCode.None;
+}

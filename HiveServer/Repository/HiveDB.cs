@@ -24,9 +24,13 @@ public class HiveDB : IHiveDB
 
         Open();
 
-        //_dbConn.BeginTransaction();
         _compiler = new MySqlCompiler();
         _queryFactory = new QueryFactory( _dbConn, _compiler );
+    }
+
+    public IDbTransaction BeginTxAsync()
+    {
+        return _dbConn.BeginTransaction();
     }
 
     private void Open()
@@ -46,18 +50,18 @@ public class HiveDB : IHiveDB
         Close();
     }
 
-    public async Task< ErrorCode > VerifyAccount( string userId, string password )
+    public async Task< ErrorCode > VerifyAccount( string account, string password )
     {
         try
         {
-            var account = await _queryFactory.Query( "account" )
+            var user = await _queryFactory.Query( "user" )
                 .Select( "*" )
-                .Where( "user_id", userId )
+                .Where( "account", account )
                 .FirstOrDefaultAsync();
-            if ( account is null )
+            if ( user is null )
                 return ErrorCode.HiveLoginNullUserId;
 
-            if ( account.Password != password )
+            if ( user.password != password )
                 return ErrorCode.HiveLoginInvalidPassword;
 
             return ErrorCode.None;
@@ -68,14 +72,14 @@ public class HiveDB : IHiveDB
         }
     }
 
-    public async Task< ErrorCode > CreateAccount( string userId, string password )
+    public async Task< ErrorCode > CreateUser( string account, string password )
     {
         try
         {
-            var affectedRows = await _queryFactory.Query( "account" )
+            var affectedRows = await _queryFactory.Query( "user" )
                 .InsertAsync( new
                 {
-                    user_id  = userId,
+                    account  = account,
                     password = password,
                     create_time = DateTime.Now,
                 } );
@@ -92,17 +96,17 @@ public class HiveDB : IHiveDB
         }
     }
 
-    public async Task< ErrorCode > CreateToken( string userId )
+    public async Task< ErrorCode > CreateToken( string account )
     {
         try
         {
             var affectedRows = await _queryFactory.Query( "login_token" )
                 .InsertAsync( new
                 {
-                    account_user_id = userId,
+                    account = account,
                     hive_token = "",
                     create_time = DateTime.Now,
-                    expires_time = DateTime.Now,
+                    expire_time = DateTime.Now,
                 } );
             if ( affectedRows < 1 )
             {
@@ -120,11 +124,11 @@ public class HiveDB : IHiveDB
         }
     }
 
-    public async Task< ErrorCode > VerifyToken( string userId, string password )
+    public async Task< ErrorCode > VerifyToken( string account, string password )
     {
         var loginToken = await _queryFactory.Query( "login_token" )
                 .Select( "*" )
-                .Where( "user_id", userId )
+                .Where( "account", account )
                 .FirstOrDefaultAsync();
         if ( loginToken is null )
             return ErrorCode.HiveVerifyTokenNullToken;
@@ -132,12 +136,12 @@ public class HiveDB : IHiveDB
         return ErrorCode.None;
     }
 
-    public async Task< ErrorCode > SaveToken( string userId, string token )
+    public async Task< ErrorCode > SaveToken( string account, string token )
     {
         try
         {
             var affectedRows = await _queryFactory.Query( "login_token" )
-                .UpdateAsync( new{ UserId = userId, Token = token } );
+                .UpdateAsync( new{ account = account, hive_token = token } );
             if ( affectedRows < 1 )
                 return ErrorCode.HiveLoginSaveTokenFail;
 
