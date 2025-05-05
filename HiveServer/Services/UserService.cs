@@ -7,11 +7,11 @@ namespace HiveServer.Services;
 public class UserService : IUserService
 {
     private readonly ILogger< UserService > _logger;
-    private readonly IHiveDB _hiveDB;
+    private readonly IUserDB _userDB;
 
-    public UserService( IHiveDB hiveDB, ILogger<UserService> logger )
+    public UserService( IUserDB hiveDB, ILogger<UserService> logger )
     {
-        _hiveDB = hiveDB;
+        _userDB = hiveDB;
         _logger = logger;
     }
 
@@ -19,10 +19,10 @@ public class UserService : IUserService
     {
         try
         {
-            //using var tx = _hiveDB.BeginTxAsync();
+            //using var tx = _userDB.BeginTxAsync();
 
-            var verifyResult = await _hiveDB.VerifyAccount( account, password );
-            if ( verifyResult.HasError() )
+            var verifyResult = await _userDB.VerifyAccount( account, password );
+            if ( !verifyResult.IsSuccess() )
             {
                 //tx.Rollback();
                 return ( verifyResult, string.Empty );
@@ -30,8 +30,8 @@ public class UserService : IUserService
 
             var token = TokenIssuer.Issue( account );
 
-            var saveResult = await _hiveDB.SaveToken( account, token );
-            if ( saveResult.HasError() )
+            var saveResult = await _userDB.SaveToken( account, token );
+            if ( !saveResult.IsSuccess() )
             {
                 //tx.Rollback();
                 return ( saveResult, string.Empty );
@@ -50,18 +50,16 @@ public class UserService : IUserService
     {
         try
         {
-            //using var tx = _hiveDB.BeginTxAsync();
-
-            var createResult = await _hiveDB.CreateUser( account, password );
-            if ( createResult.HasError() )
+            var createResult = await _userDB.CreateUser( account, password );
+            if ( !createResult.IsSuccess() )
             {
                 //tx.Rollback();
                 _logger.LogWarning( $"Account creation failed for user {account}: {createResult}" );
                 return createResult;
             }
 
-            var createToken = await _hiveDB.CreateToken( account );
-            if ( createToken.HasError() )
+            var createToken = await _userDB.CreateToken( account );
+            if ( !createToken.IsSuccess() )
             {
                 //tx.Rollback();
                 _logger.LogWarning( $"Token creation failed for user {account}: {createToken}" );

@@ -9,7 +9,7 @@ builder.Services.Configure< DBConfig >( configuration.GetSection( nameof( DBConf
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddTransient< IHiveDB, HiveDB >();
+builder.Services.AddTransient< IUserDB, UserDB >();
 builder.Services.AddTransient< IAuthService, AuthService >();
 builder.Services.AddTransient< IUserService, UserService >();
 

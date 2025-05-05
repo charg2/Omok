@@ -3,7 +3,7 @@
 @HiveServer_HostAddress_Account = http://localhost:5071/api/account
 
 ### 가입
-POST {{HiveServer_HostAddress}}/register/
+POST {{HiveServer_HostAddress}}/Register/
 Content-Type: application/json
 
 {
@@ -12,7 +12,7 @@ Content-Type: application/json
 }
 
 ### 로그인
-POST {{HiveServer_HostAddress}}/login/
+POST {{HiveServer_HostAddress}}/Login/
 Content-Type: application/json
 
 {
@@ -21,10 +21,19 @@ Content-Type: application/json
 }
 
 ### 토큰 인증
-POST {{HiveServer_HostAddress}}/verify_token/
+POST {{HiveServer_HostAddress}}/VerifyToken/
 Content-Type: application/json
 
 {
   "Account":"mlxg",
-  "Token":"1234567890"
+  "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test"
+}
+
+### 토큰 갱신
+POST {{HiveServer_HostAddress}}/RefreshToken/
+Content-Type: application/json
+
+{
+  "Account":"mlxg",
+  "OldToken":"test_test|test_test|test_test|test_test|test_test|test_test|test"
 }

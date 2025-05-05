@@ -1,6 +1,21 @@
-@GameServer_HostAddress = http://localhost:5044
+@GameServer_HostAddress = http://localhost:5044/api
 
-GET {{GameServer_HostAddress}}/weatherforecast/
-Accept: application/json
+### 게임 로그인
+POST {{GameServer_HostAddress}}/Login/
+Content-Type: application/json
 
-###
+{
+  "Account":"mlxg",
+  "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test"
+}
+
+### 플레이서 생성
+POST {{GameServer_HostAddress}}/CreatePlayer/
+Content-Type: application/json
+
+{
+  "Account":"mlxg",
+  "UserId":1,
+  "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test",
+  "NickName":"마라로제뉴진스"
+}

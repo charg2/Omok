@@ -8,38 +8,55 @@ using Shared;
 namespace GameServer.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route( "api/[controller]" )]
 public class LoginController : ControllerBase
 {
     private readonly ILogger< LoginController > _logger;
-    private readonly IUserService _userService;
+    private readonly IAuthService _authService;
+    private readonly IPlayerService _playerService;
 
-    public LoginController( ILogger< LoginController > logger, IUserService userService )
+    public LoginController( ILogger< LoginController > logger, IAuthService authService, IPlayerService userService )
     {
         _logger = logger;
-        _userService = userService;
+        _authService = authService;
+        _playerService = userService;
     }
 
     [HttpPost]
-    public async Task< GameLoginRes > Post( [FromBody] GameLoginReq request )
+    public async Task< GameLoginRes > Post( [FromBody] GameLoginReq req )
     {
-        var ( errorCode, userData ) = await _userService.Login( request.Account, request.Token );
-        if ( errorCode != ErrorCode.None )
+        // Validate the request
+        var ( verifyErrorCode, userId ) = await _authService.VerifyToken( req.Account, req.Token );
+        if ( !verifyErrorCode.IsSuccess() )
         {
-            _logger.LogWarning( $"Login failed for user {request.Account}: {errorCode}" );
-            return PostResponse( request, errorCode, userData );
+            _logger.LogWarning( $"Login failed for user {req.Account}: {verifyErrorCode}" );
+            return new()
+            {
+                Account = req.Account,
+                Token = req.Token,
+                Error = ErrorCode.None,
+            };
         }
 
-        return PostResponse( request, ErrorCode.None, userData );
-    }
+        // Load Player Data
+        var ( loadErrorCode, playerData ) = await _playerService.LoadPlayer( userId );
+        if ( !loadErrorCode.IsSuccess() )
+        {
+            _logger.LogWarning( $"User data not found for user {req.Account}" );
+            return new()
+            {
+                Account = req.Account,
+                Token = req.Token,
+                Error = ErrorCode.None,
+            };
+        }
 
-    public GameLoginRes PostResponse( GameLoginReq req, ErrorCode errorCode, UserLoadData userData )
-    {
+        /// 플레이어 데이터가 없어도 전송, CreatePlayer 호출 유도
         return new()
         {
             Account = req.Account,
             Token = req.Token,
-            Error = errorCode,
+            Error = ErrorCode.None,
         };
     }
 

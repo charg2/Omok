@@ -1,11 +1,9 @@
-using Shared;
+namespace GameServer.Models.User;
 
-namespace HiveServer.Models.Auth;
-
-public class VerifyTokenRes
+public class CreatePlayerReq
 {
     public string Account { get; set; } = string.Empty;
     public string Token { get; set; } = string.Empty;
     public long UserId { get; set; } = 0;
-    public ErrorCode Error { get; set; } = ErrorCode.None;
+    public string NickName { get; set; } = string.Empty;
 }

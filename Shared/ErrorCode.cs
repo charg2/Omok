@@ -17,14 +17,27 @@ public enum ErrorCode
     /// </summary>
     HiveVerifyTokenExecptionOccur,
     HiveVerifyTokenNullToken,
+    HiveVerifyTokenInvalid,
 
-    UnknownError,
     HiveLoginCreateTokenFail,
     HiveLoginCreateAccountFail,
+
+    /// <summary>
+    /// 게임 인증
+    /// </summary>
+
+    /// <summary>
+    /// 게임 플레이어 관련
+    /// </summary>
+    GamePlayerIsNull,
+    GamePlayerAlreadyExists,
+
+    UnknownError,
+    InvalidUserId,
 }
 
 public static class ErrorCodeEx
 {
-    public static bool HasError( ref this ErrorCode errorCode )
-        => errorCode != ErrorCode.None;
+    public static bool IsSuccess( ref this ErrorCode errorCode )
+        => errorCode == ErrorCode.None;
 }

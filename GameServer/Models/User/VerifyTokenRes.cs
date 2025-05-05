@@ -1,6 +1,6 @@
 using Shared;
 
-namespace HiveServer.Models.Auth;
+namespace GameServer.Models.User;
 
 public class VerifyTokenRes
 {

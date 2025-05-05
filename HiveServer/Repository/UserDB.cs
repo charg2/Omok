@@ -8,16 +8,16 @@ using Shared;
 
 namespace HiveServer.Repository;
 
-public class HiveDB : IHiveDB
+public class UserDB : IUserDB
 {
     private readonly IOptions< DBConfig > _dbConfig;
     private IDbConnection? _dbConn;
     private MySqlTransaction? _dbTx;
     private readonly MySqlCompiler _compiler;
     private readonly QueryFactory _queryFactory;
-    private readonly ILogger< HiveDB > _logger;
+    private readonly ILogger< UserDB > _logger;
 
-    public HiveDB( ILogger< HiveDB > logger, IOptions< DBConfig > dbConfig )
+    public UserDB( ILogger< UserDB > logger, IOptions< DBConfig > dbConfig )
     {
         _logger   = logger;
         _dbConfig = dbConfig;
@@ -68,6 +68,7 @@ public class HiveDB : IHiveDB
         }
         catch ( Exception ex )
         {
+            _logger.LogError( $"DB Error Occur! {ex.Message}" );
             return ErrorCode.None;
         }
     }
@@ -92,7 +93,7 @@ public class HiveDB : IHiveDB
         {
             _logger.LogError( $"DB Error Occur! {ex.Message}" );
 
-            return ErrorCode.None;
+            return ErrorCode.UnknownError;
         }
     }
 
@@ -100,11 +101,22 @@ public class HiveDB : IHiveDB
     {
         try
         {
-            var affectedRows = await _queryFactory.Query( "login_token" )
+            long userId = await _queryFactory.Query( "user" )
+                .Select( "id" )
+                .Where( "account", account )
+                .FirstOrDefaultAsync< long >();
+            if (  userId == 0 )
+            {
+                _logger.LogError( $"DB Error Occur!" );
+                return ErrorCode.HiveLoginCreateTokenFail;
+            }
+
+            var affectedRows = await _queryFactory.Query( "auth_token" )
                 .InsertAsync( new
                 {
                     account = account,
                     hive_token = "",
+                    user_id = userId,
                     create_time = DateTime.Now,
                     expire_time = DateTime.Now,
                 } );
@@ -124,23 +136,26 @@ public class HiveDB : IHiveDB
         }
     }
 
-    public async Task< ErrorCode > VerifyToken( string account, string password )
+    public async Task< ( ErrorCode, long userId ) > VerifyToken( string account, string token )
     {
-        var loginToken = await _queryFactory.Query( "login_token" )
+        var authToken = await _queryFactory.Query( "auth_token" )
                 .Select( "*" )
                 .Where( "account", account )
                 .FirstOrDefaultAsync();
-        if ( loginToken is null )
-            return ErrorCode.HiveVerifyTokenNullToken;
+        if ( authToken is null )
+            return ( ErrorCode.HiveVerifyTokenNullToken, 0 );
 
-        return ErrorCode.None;
+        if ( authToken.hive_token != token )
+            return ( ErrorCode.HiveVerifyTokenInvalid, 0 );
+
+        return ( ErrorCode.None, authToken.user_id );
     }
 
     public async Task< ErrorCode > SaveToken( string account, string token )
     {
         try
         {
-            var affectedRows = await _queryFactory.Query( "login_token" )
+            var affectedRows = await _queryFactory.Query( "auth_token" )
                 .UpdateAsync( new{ account = account, hive_token = token } );
             if ( affectedRows < 1 )
                 return ErrorCode.HiveLoginSaveTokenFail;
@@ -153,4 +168,6 @@ public class HiveDB : IHiveDB
             return ErrorCode.HiveLoginSaveTokenFail;
         }
     }
+
+
 }

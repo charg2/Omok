@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HiveServer.Controllers;
 
 [ApiController]
-[Route( "api/[contoller]" )]
+[Route( "api/[controller]" )]
 public class LoginController : ControllerBase
 {
     private readonly ILogger< RegisterController > _logger;

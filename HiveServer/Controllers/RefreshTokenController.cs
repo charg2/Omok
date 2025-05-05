@@ -6,14 +6,14 @@ namespace HiveServer.Controllers;
 
 [ApiController]
 [Route( "api/[controller]" )]
-public class VerifyTokenController : ControllerBase
+public class RefreshTokenController : ControllerBase
 {
-    private readonly ILogger< VerifyTokenController > _logger;
+    private readonly ILogger< RefreshTokenController > _logger;
     private readonly IAuthService _authService;
 
-    public VerifyTokenController( ILogger< VerifyTokenController > logger, IAuthService authService )
+    public RefreshTokenController( ILogger< RefreshTokenController > logger, IAuthService authService )
     {
-        _logger      = logger;
+        _logger = logger;
         _authService = authService;
     }
 
@@ -26,11 +26,10 @@ public class VerifyTokenController : ControllerBase
 
         return new()
         {
-            Account  = request.Account,
-            UserId   = userId,
-            Token    = request.Token,
-            Error    = verifyResult,
+            Account = request.Account,
+            Token = request.Token,
+            UserId = userId,
+            Error = verifyResult,
         };
     }
-
 }

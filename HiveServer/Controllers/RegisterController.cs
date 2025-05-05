@@ -8,7 +8,7 @@ using Shared;
 namespace HiveServer.Controllers;
 
 [ApiController]
-[Route( "api/[contoller]" )]
+[Route( "api/[controller]" )]
 public class RegisterController : ControllerBase
 {
     private readonly ILogger< RegisterController > _logger;

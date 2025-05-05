@@ -1,8 +1,10 @@
 using Microsoft.Extensions.Options;
-using System.Data;
-using SqlKata.Execution;
-using SqlKata.Compilers;
 using MySqlConnector;
+using Shared;
+using SqlKata.Compilers;
+using SqlKata.Execution;
+using System.Data;
+using System.Security.Principal;
 
 namespace GameServer.Repository;
 
@@ -43,21 +45,48 @@ public class GameDB : IGameDB
         Close();
     }
 
-    public async Task< bool > CreateAccount( string userId, string password )
+    public async Task< ErrorCode > CreatePlayer( long userId, string nickName )
     {
-        int affectedRows = 0;
-
         try
         {
-            affectedRows = await _queryFactory.Query( "account" )
-                .InsertAsync( new{ UserId = userId, Password = password } );
+            var affectedRows = await _queryFactory.Query( "player" )
+                .InsertAsync( new
+                {
+                    user_id = userId,
+                    nick_name = nickName,
+                } );
+            if ( affectedRows < 1 )
+            {
+                _logger.LogError( $"DB Error Occur!" );
+                return ErrorCode.GamePlayerAlreadyExists;
+            }
+
+            return ErrorCode.None;
         }
         catch ( Exception ex )
         {
-            // Log the exception (ex) if needed
-            return false;
+            _logger.LogError( $"DB Query Error Occur! Reason: {ex.Message}\n {ex.StackTrace}" );
+            return ErrorCode.UnknownError;
         }
+    }
 
-        return affectedRows > 0;
+
+    public async Task< ( ErrorCode, PlayerData ) > LoadPlayer( long userId )
+    {
+        try
+        {
+            var loginToken = await _queryFactory.Query( "player" )
+                .Select( "*" )
+                .Where( "user_id", userId )
+                .FirstOrDefaultAsync();
+            if ( loginToken is null )
+                return ( ErrorCode.GamePlayerIsNull, null );
+
+            return ( ErrorCode.None, loginToken );
+        }
+        catch ( Exception ex )
+        {
+            return ( ErrorCode.UnknownError, null );
+        }
     }
 }
