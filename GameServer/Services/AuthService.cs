@@ -1,9 +1,10 @@
-using GameServer.Models.User;
+using GameServer.DTO;
 using GameServer.Repository;
 using GameServer.Services.Interface;
+using Microsoft.Extensions.Options;
 using Shared;
 
-namespace HiveServer.Services;
+namespace FakeHiveServer.Services;
 
 
 public class AuthService : IAuthService
@@ -12,14 +13,16 @@ public class AuthService : IAuthService
     private readonly IMemoryDB _memoryDB;
     private readonly IGameDB _gameDB;
     private readonly HttpClient _httpClient;
+    private readonly IOptions< ServiceConfig > _serviceConfig;
 
-    public AuthService( ILogger< AuthService > logger, IGameDB gameDB, IMemoryDB memoryDB, HttpClient httpClient )
+    public AuthService( ILogger< AuthService > logger, IOptions< ServiceConfig > serviceConfig, IGameDB gameDB, IMemoryDB memoryDB, HttpClient httpClient )
     {
         _gameDB = gameDB;
         _memoryDB = memoryDB;
         _logger = logger;
+        _serviceConfig = serviceConfig;
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri( "http://localhost:5071" );
+        _httpClient.BaseAddress = new Uri( _serviceConfig.Value.FakeHiveServer );
     }
 
     public async Task< ( ErrorCode, long ) > VerifyToken( string account, string token )

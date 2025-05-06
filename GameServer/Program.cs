@@ -1,18 +1,20 @@
 using GameServer.Repository;
 using GameServer.Services;
 using GameServer.Services.Interface;
-using HiveServer.Services;
+using FakeHiveServer.Services;
 using ZLogger;
 
 var builder = WebApplication.CreateBuilder( args );
 IConfiguration configuration = builder.Configuration;
 builder.Services.Configure< DBConfig >( configuration.GetSection( nameof( DBConfig ) ) );
-
+builder.Services.Configure< ServiceConfig >( configuration.GetSection( nameof( ServiceConfig ) ) );
 
 builder.Services.AddControllers();
 builder.Services.AddTransient< IGameDB, GameDB >();
 builder.Services.AddTransient< IMemoryDB, MemoryDB >();
 builder.Services.AddTransient< IAuthService, AuthService >();
+builder.Services.AddTransient< IFriendService, FriendService >();
+builder.Services.AddTransient< IMailService, MailService >();
 builder.Services.AddTransient< IPlayerService, PlayerService >();
 
 /// Http통신

@@ -1,4 +1,4 @@
-using HiveServer.Services;
+using FakeHiveServer.Services;
 using Shared;
 
 namespace GameServer.Services.Interface;
@@ -20,15 +20,10 @@ public interface IAttendanceService
 
 public interface IFriendService
 {
-    public Task< ErrorCode > DoSomething( long userId );
+    public Task< ErrorCode > ReadFriendList( long userId );
 }
 
 public interface IChatService
-{
-    public Task< ErrorCode > DoSomething( long userId );
-}
-
-public interface IMailService
 {
     public Task< ErrorCode > DoSomething( long userId );
 }

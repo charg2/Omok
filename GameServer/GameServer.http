@@ -9,7 +9,7 @@ Content-Type: application/json
   "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test"
 }
 
-### 플레이서 생성
+### 플레이어 생성
 POST {{GameServer_HostAddress}}/CreatePlayer/
 Content-Type: application/json
 
@@ -18,4 +18,55 @@ Content-Type: application/json
   "UserId":1,
   "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test",
   "NickName":"마라로제뉴진스"
+}
+
+### 메일 송신
+POST {{GameServer_HostAddress}}/SendMail/
+Content-Type: application/json
+
+{
+  "Account" : "mlxg",
+  "Token" : "test_test|test_test|test_test|test_test|test_test|test_test|test",
+  "Receiver" : "마라로제뉴진스",
+  "Title" : "test_header",
+  "Content" : "test_body"
+}
+
+
+### 메일 목록 읽기
+POST {{GameServer_HostAddress}}/ReadMailList/
+Content-Type: application/json
+
+{
+  "Account":"mlxg",
+  "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test",
+  "LastReadMailId":8
+}
+
+
+### 친구 추가
+POST {{GameServer_HostAddress}}/AddFriend/
+Content-Type: application/json
+
+{
+  "Account":"mlxg",
+  "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test",
+}
+
+### 친구 목록 읽기
+POST {{GameServer_HostAddress}}/ReadFriendList/
+Content-Type: application/json
+
+{
+  "Account":"mlxg",
+  "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test",
+}
+
+### 매칭 요청
+POST {{GameServer_HostAddress}}/RequestMatching/
+Content-Type: application/json
+
+{
+  "Account":"mlxg",
+  "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test",
 }

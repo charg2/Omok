@@ -1,7 +1,7 @@
-using GameServer.Models.User;
+using GameServer.DTO;
 using GameServer.Repository;
 using GameServer.Services.Interface;
-using HiveServer.Services;
+using FakeHiveServer.Services;
 using Microsoft.AspNetCore.Mvc;
 using Shared;
 
@@ -39,7 +39,7 @@ public class LoginController : ControllerBase
         }
 
         // Load Player Data
-        var ( loadErrorCode, playerData ) = await _playerService.LoadPlayer( userId );
+        var ( loadErrorCode, playerModel ) = await _playerService.LoadPlayer( userId );
         if ( !loadErrorCode.IsSuccess() )
         {
             _logger.LogWarning( $"User data not found for user {req.Account}" );
@@ -57,6 +57,7 @@ public class LoginController : ControllerBase
             Account = req.Account,
             Token = req.Token,
             Error = ErrorCode.None,
+            Player = playerModel,
         };
     }
 

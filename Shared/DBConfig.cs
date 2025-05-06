@@ -1,6 +1,6 @@
-﻿public class DBConfig
+public class DBConfig
 {
-    public string HiveDB { get; set; }
-    public string GameDB { get; set; }
-    public string Redis { get; set; }
+    public string UserDB { get; set; } = string.Empty;
+    public string GameDB { get; set; } = string.Empty;
+    public string Redis { get; set; } = string.Empty;
 }

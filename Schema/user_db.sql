@@ -1,4 +1,6 @@
-use hive_db;
+CREATE SCHEMA IF NOT EXISTS `user_db`;
+
+use `user_db`;
 
 CREATE TABLE IF NOT EXISTS user
 (

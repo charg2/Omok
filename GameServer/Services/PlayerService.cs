@@ -1,6 +1,7 @@
+using GameServer.Model;
 using GameServer.Repository;
 using GameServer.Services.Interface;
-using HiveServer.Services;
+using FakeHiveServer.Services;
 using Shared;
 using System.Net.Http;
 
@@ -19,7 +20,7 @@ public class PlayerService : IPlayerService
         _logger = logger;
     }
 
-    public async Task< ( ErrorCode, PlayerData ) > LoadPlayer( long userId )
+    public async Task< ( ErrorCode, PlayerModel ) > LoadPlayer( long userId )
     {
         var ( _, playerData ) = await _gameDB.LoadPlayer( userId );
         if ( playerData is null )
@@ -28,7 +29,7 @@ public class PlayerService : IPlayerService
         return ( ErrorCode.None, playerData );
     }
 
-    public async Task< ErrorCode > CachePlayer( long userId, PlayerData userData )
+    public async Task< ErrorCode > CachePlayer( long userId, PlayerModel userData )
     {
         return ErrorCode.None;
     }
@@ -38,4 +39,17 @@ public class PlayerService : IPlayerService
         var errorCode = await _gameDB.CreatePlayer( userId, nickName );
         return errorCode;
     }
+
+    public async Task< ( ErrorCode, long playerId ) > GetUserIdUsingNickName( string receiverNickName )
+    {
+        var ( errorCode, userId ) = await _gameDB.GetUserIdUsingNickName( receiverNickName );
+        if ( !errorCode.IsSuccess() )
+        {
+            _logger.LogWarning( $"ConvertPlayerId failed: {errorCode}" );
+            return ( errorCode, 0 );
+        }
+
+        return ( ErrorCode.None, userId );
+    }
 }
+
