@@ -23,14 +23,21 @@ public enum ErrorCode
     HiveLoginCreateAccountFail,
 
     /// <summary>
-    /// 게임 인증
-    /// </summary>
-
-    /// <summary>
     /// 게임 플레이어 관련
     /// </summary>
     GamePlayerIsNull,
     GamePlayerAlreadyExists,
+
+    /// <summary>
+    /// 메일 시스템
+    /// </summary>
+    GameMailSendFail,
+
+    /// <summary>
+    /// 친구 시스템
+    /// </summary>
+    GameFriendAddFail,
+    GameFriendRemoveFail,
 
     UnknownError,
     InvalidUserId,

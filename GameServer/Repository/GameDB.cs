@@ -75,18 +75,18 @@ public class GameDB : IGameDB
     {
         try
         {
-            var player = await _queryFactory.Query( "player" )
+            var pc = await _queryFactory.Query( "player" )
                 .Select( "*" )
                 .Where( "user_id", userId )
                 .FirstOrDefaultAsync();
-            if ( player is null )
+            if ( pc is null )
                 return ( ErrorCode.GamePlayerIsNull, null );
 
             return ( ErrorCode.None, new()
             {
-                UserId     = player.user_id,
-                NickName   = player.nick_name,
-                CreateTime = player.create_time,
+                UserId     = pc.user_id,
+                NickName   = pc.nick_name,
+                CreateTime = pc.create_time,
             } );
         }
         catch ( Exception ex )
@@ -99,14 +99,14 @@ public class GameDB : IGameDB
     {
         try
         {
-            var playerId = await _queryFactory.Query( "player" )
-                .Select( "*" )
+            var userId = await _queryFactory.Query( "player" )
+                .Select( "user_id" )
                 .Where( "nick_name", nickName )
                 .FirstOrDefaultAsync< long >();
-            if ( playerId == 0 )
+            if ( userId is 0 )
                 return ( ErrorCode.GamePlayerIsNull, 0 );
 
-            return ( ErrorCode.None, playerId );
+            return ( ErrorCode.None, userId );
         }
         catch ( Exception ex )
         {
@@ -156,6 +156,73 @@ public class GameDB : IGameDB
                 return ( ErrorCode.GamePlayerIsNull, null );
 
             return ( ErrorCode.None, mailList.ToList() );
+        }
+        catch ( Exception ex )
+        {
+            return ( ErrorCode.UnknownError, null );
+        }
+    }
+
+    public async Task< ErrorCode > AddFriend( long ownerId, long friendId )
+    {
+        try
+        {
+            var affectedRows = await _queryFactory.Query( "friend" )
+                .InsertAsync( new
+                {
+                    owner_id = ownerId,
+                    friend_id = friendId,
+                    status = EFriendStatus.Request,
+                } );
+            if ( affectedRows < 1 )
+            {
+                _logger.LogError( $"DB Error Occur!" );
+                return ErrorCode.GamePlayerAlreadyExists;
+            }
+            return ErrorCode.None;
+        }
+        catch ( Exception ex )
+        {
+            _logger.LogError( $"DB Query Error Occur! Reason: {ex.Message}\n {ex.StackTrace}" );
+            return ErrorCode.UnknownError;
+        }
+    }
+
+    public async Task< ErrorCode > RemoveFriend( long ownerId, long friendId )
+    {
+        try
+        {
+            var affectedRows = await _queryFactory.Query( "friend" )
+                .Where( "owner_id", ownerId )
+                .Where( "friend_id", friendId )
+                .DeleteAsync();
+            if ( affectedRows < 1 )
+            {
+                _logger.LogError( $"DB Error Occur!" );
+                return ErrorCode.GamePlayerAlreadyExists;
+            }
+
+            return ErrorCode.None;
+        }
+        catch ( Exception ex )
+        {
+            _logger.LogError( $"DB Query Error Occur! Reason: {ex.Message}\n {ex.StackTrace}" );
+            return ErrorCode.UnknownError;
+        }
+    }
+
+    public async Task< ( ErrorCode, List< FriendModel > ) > ReadFriendList( long ownerId )
+    {
+        try
+        {
+            var friendList = await _queryFactory.Query( "friend" )
+                .Select( "*" )
+                .Where( "owner_id", ownerId )
+                .GetAsync< FriendModel >();
+            if ( friendList is null )
+                return ( ErrorCode.GamePlayerIsNull, null );
+
+            return ( ErrorCode.None, friendList.ToList() );
         }
         catch ( Exception ex )
         {

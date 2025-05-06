@@ -18,11 +18,6 @@ public interface IAttendanceService
     public Task< ErrorCode > DoSomething( long userId );
 }
 
-public interface IFriendService
-{
-    public Task< ErrorCode > ReadFriendList( long userId );
-}
-
 public interface IChatService
 {
     public Task< ErrorCode > DoSomething( long userId );

@@ -5,7 +5,7 @@ POST {{GameServer_HostAddress}}/Login/
 Content-Type: application/json
 
 {
-  "Account":"mlxg",
+  "Account":"mlt",
   "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test"
 }
 
@@ -20,6 +20,17 @@ Content-Type: application/json
   "NickName":"마라로제뉴진스"
 }
 
+### 플레이어 생성2
+POST {{GameServer_HostAddress}}/CreatePlayer/
+Content-Type: application/json
+
+{
+  "Account":"mlt",
+  "UserId":2,
+  "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test",
+  "NickName":"엄준식"
+}
+
 ### 메일 송신
 POST {{GameServer_HostAddress}}/SendMail/
 Content-Type: application/json
@@ -27,7 +38,7 @@ Content-Type: application/json
 {
   "Account" : "mlxg",
   "Token" : "test_test|test_test|test_test|test_test|test_test|test_test|test",
-  "Receiver" : "마라로제뉴진스",
+  "Receiver" : "엄준식",
   "Title" : "test_header",
   "Content" : "test_body"
 }
@@ -43,7 +54,6 @@ Content-Type: application/json
   "LastReadMailId":8
 }
 
-
 ### 친구 추가
 POST {{GameServer_HostAddress}}/AddFriend/
 Content-Type: application/json
@@ -51,6 +61,7 @@ Content-Type: application/json
 {
   "Account":"mlxg",
   "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test",
+  "FriendName":"엄준식"
 }
 
 ### 친구 목록 읽기
@@ -59,7 +70,7 @@ Content-Type: application/json
 
 {
   "Account":"mlxg",
-  "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test",
+  "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test"
 }
 
 ### 매칭 요청
@@ -68,5 +79,5 @@ Content-Type: application/json
 
 {
   "Account":"mlxg",
-  "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test",
+  "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test"
 }

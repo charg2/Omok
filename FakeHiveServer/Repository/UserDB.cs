@@ -105,7 +105,7 @@ public class UserDB : IUserDB
                 .Select( "id" )
                 .Where( "account", account )
                 .FirstOrDefaultAsync< long >();
-            if (  userId == 0 )
+            if (  userId is 0 )
             {
                 _logger.LogError( $"DB Error Occur!" );
                 return ErrorCode.HiveLoginCreateTokenFail;
@@ -156,7 +156,8 @@ public class UserDB : IUserDB
         try
         {
             var affectedRows = await _queryFactory.Query( "auth_token" )
-                .UpdateAsync( new{ account = account, hive_token = token } );
+                .Where( "account", account )
+                .UpdateAsync( new{ hive_token = token } );
             if ( affectedRows < 1 )
                 return ErrorCode.HiveLoginSaveTokenFail;
 
@@ -164,10 +165,9 @@ public class UserDB : IUserDB
         }
         catch ( Exception ex )
         {
-            _logger.LogError( $"DB Error Occur!" );
+            _logger.LogError( $"DB Error Occur! Reason: {ex.Message}" );
             return ErrorCode.HiveLoginSaveTokenFail;
         }
     }
-
 
 }

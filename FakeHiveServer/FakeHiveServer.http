@@ -20,6 +20,16 @@ Content-Type: application/json
   "Password":"mlt"
 }
 
+### 로그인2
+POST {{HiveServer_HostAddress}}/Login/
+Content-Type: application/json
+
+{
+  "Account":"mlt",
+  "Password":"mlxg"
+}
+
+
 ### 토큰 인증
 POST {{HiveServer_HostAddress}}/VerifyToken/
 Content-Type: application/json

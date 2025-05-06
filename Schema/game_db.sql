@@ -23,7 +23,12 @@ CREATE TABLE IF NOT EXISTS mail
 
 CREATE TABLE IF NOT EXISTS friend
 (
-  `owner_id` BIGINT AUTO_INCREMENT PRIMARY KEY
+  `owner_id` BIGINT,
+  `friend_id` BIGINT,
+  `status` TINYINT,
+  `add_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  PRIMARY KEY ( `owner_id`, `friend_id` )
 );
 
 CREATE TABLE IF NOT EXISTS item

@@ -17,9 +17,9 @@ public class AuthService : IAuthService
 
     public AuthService( ILogger< AuthService > logger, IOptions< ServiceConfig > serviceConfig, IGameDB gameDB, IMemoryDB memoryDB, HttpClient httpClient )
     {
+        _logger = logger;
         _gameDB = gameDB;
         _memoryDB = memoryDB;
-        _logger = logger;
         _serviceConfig = serviceConfig;
         _httpClient = httpClient;
         _httpClient.BaseAddress = new Uri( _serviceConfig.Value.FakeHiveServer );

@@ -27,6 +27,21 @@ public class AddFriendController : ControllerBase
     [HttpPost]
     public async Task< AddFriendRes > Post( [FromBody] AddFriendReq request )
     {
-        return new();
+        var ( verifyResult, userId ) = await _authService.VerifyToken( request.Account, request.Token );
+        if ( !verifyResult.IsSuccess() )
+        {
+            _logger.LogWarning( $"Add Friend Auth Failed: {verifyResult}" );
+            return new() { Error = verifyResult };
+        }
+
+        var ( getResult, friendId ) = await _playerService.GetUserIdUsingNickName( request.FriendName );
+        if ( !getResult.IsSuccess() )
+        {
+            _logger.LogWarning( $"Add Friend GetUserId Failed: {getResult}" );
+            return new(){ Error = getResult };
+        }
+
+        var addResult = await _friendService.AddFriend( userId, friendId );
+        return new(){};
     }
 }

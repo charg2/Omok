@@ -28,7 +28,7 @@ public class ReadMailListController : ControllerBase
         var ( verifyResult, userId ) = await _authService.VerifyToken( request.Account, request.Token );
         if ( !verifyResult.IsSuccess() )
         {
-            _logger.LogWarning( $"SendMail failed: {verifyResult}" );
+            _logger.LogWarning( $"Read Mail failed: {verifyResult}" );
             return new(){ Error = verifyResult };
         }
 

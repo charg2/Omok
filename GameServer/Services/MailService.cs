@@ -13,14 +13,14 @@ public class MailService : IMailService
 
     public MailService( ILogger< MailService > logger, IGameDB gameDB )
     {
-        _gameDB = gameDB;
         _logger = logger;
+        _gameDB = gameDB;
     }
 
     public async Task< ErrorCode > SendMail( SendMailParam param )
     {
         var errorCode = await _gameDB.CreateMail( param );
-        if ( errorCode.IsSuccess() )
+        if ( !errorCode.IsSuccess() )
         {
             _logger.LogWarning( $"SendMail failed: {errorCode}" );
             return errorCode;

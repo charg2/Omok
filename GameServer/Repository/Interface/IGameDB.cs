@@ -14,4 +14,8 @@ public interface IGameDB : IDisposable
     public Task< ErrorCode > CreateMail( SendMailParam param );
     public Task< ( ErrorCode, List< MailModel > ) > ReadMailList( long userId, int lastReadMailId );
 
+    public Task< ErrorCode > AddFriend( long ownerId, long friendId );
+    public Task< ErrorCode > RemoveFriend( long ownerId, long friendId );
+
+    public Task< ( ErrorCode, List< FriendModel > ) > ReadFriendList( long userId );
 }
