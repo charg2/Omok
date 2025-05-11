@@ -41,5 +41,3 @@ public class MailService : IMailService
         return ( error, mailList );
     }
 }
-
-

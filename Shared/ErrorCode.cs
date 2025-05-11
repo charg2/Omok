@@ -26,6 +26,7 @@ public enum ErrorCode
     /// 게임 플레이어 관련
     /// </summary>
     GamePlayerIsNull,
+    GameCachePlayerIsNull,
     GamePlayerAlreadyExists,
 
     /// <summary>
@@ -38,6 +39,7 @@ public enum ErrorCode
     /// </summary>
     GameFriendAddFail,
     GameFriendRemoveFail,
+
 
     UnknownError,
     InvalidUserId,

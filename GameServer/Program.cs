@@ -1,7 +1,8 @@
+using FakeHiveServer.Services;
 using GameServer.Repository;
 using GameServer.Services;
 using GameServer.Services.Interface;
-using FakeHiveServer.Services;
+using System.Runtime.CompilerServices;
 using ZLogger;
 
 var builder = WebApplication.CreateBuilder( args );
@@ -13,12 +14,16 @@ builder.Services.AddControllers();
 builder.Services.AddTransient< IGameDB, GameDB >();
 builder.Services.AddTransient< IMemoryDB, MemoryDB >();
 builder.Services.AddTransient< IAuthService, AuthService >();
+builder.Services.AddTransient< IChatService, ChatService >();
 builder.Services.AddTransient< IFriendService, FriendService >();
+//builder.Services.AddTransient< IItemService, ItemService >();
 builder.Services.AddTransient< IMailService, MailService >();
+builder.Services.AddTransient< IMatchService, MatchService >();
 builder.Services.AddTransient< IPlayerService, PlayerService >();
 
 /// Http통신
 builder.Services.AddHttpClient< IAuthService, AuthService >();
+builder.Services.AddHttpClient< IMatchService, MatchService >();
 
 // 기본 로거 설정 제외
 builder.Logging.ClearProviders();
@@ -28,4 +33,4 @@ builder.Logging.AddZLoggerConsole();    // 콘솔 출력
 var app = builder.Build();
 app.UseAuthorization();
 app.MapControllers();
-app.Run();
+await app.RunAsync();

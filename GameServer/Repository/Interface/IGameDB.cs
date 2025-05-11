@@ -16,6 +16,6 @@ public interface IGameDB : IDisposable
 
     public Task< ErrorCode > AddFriend( long ownerId, long friendId );
     public Task< ErrorCode > RemoveFriend( long ownerId, long friendId );
-
     public Task< ( ErrorCode, List< FriendModel > ) > ReadFriendList( long userId );
+
 }

@@ -49,4 +49,8 @@ public class AuthService : IAuthService
         return ( ErrorCode.None, teoknVerifyRes.UserId );
     }
 
+    public async Task< ( ErrorCode, long userId ) > VerifyTokenAndGetUserId( string account, string token )
+    {
+        throw new NotImplementedException();
+    }
 }

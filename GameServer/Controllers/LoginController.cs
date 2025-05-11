@@ -34,7 +34,7 @@ public class LoginController : ControllerBase
             {
                 Account = req.Account,
                 Token = req.Token,
-                Error = ErrorCode.None,
+                Error = verifyErrorCode,
             };
         }
 
@@ -47,7 +47,20 @@ public class LoginController : ControllerBase
             {
                 Account = req.Account,
                 Token = req.Token,
-                Error = ErrorCode.None,
+                Error = loadErrorCode,
+            };
+        }
+
+        /// 캐싱
+        var cacheResult = await _playerService.CachePlayer( userId, playerModel.NickName, req.Token );
+        if ( !cacheResult.IsSuccess() )
+        {
+            _logger.LogWarning( $"User data cache failed for user {req.Account}: {cacheResult}" );
+            return new()
+            {
+                Account = req.Account,
+                Token = req.Token,
+                Error = cacheResult,
             };
         }
 

@@ -29,11 +29,6 @@ public class PlayerService : IPlayerService
         return ( ErrorCode.None, playerData );
     }
 
-    public async Task< ErrorCode > CachePlayer( long userId, PlayerModel userData )
-    {
-        return ErrorCode.None;
-    }
-
     public async Task< ErrorCode > CreatePlayer( long userId, string nickName )
     {
         var errorCode = await _gameDB.CreatePlayer( userId, nickName );
@@ -42,14 +37,24 @@ public class PlayerService : IPlayerService
 
     public async Task< ( ErrorCode, long playerId ) > GetUserIdUsingNickName( string receiverNickName )
     {
-        var ( errorCode, userId ) = await _gameDB.GetUserIdUsingNickName( receiverNickName );
-        if ( !errorCode.IsSuccess() )
+        var ( getCacheResult, cacheUserId ) = await _memoryDB.GetUserIdUsingNickName( receiverNickName );
+        if ( cacheUserId != 0 )
+            return ( ErrorCode.None, cacheUserId );
+
+        var ( getDBError, dbUserId ) = await _gameDB.GetUserIdUsingNickName( receiverNickName );
+        if ( !getCacheResult.IsSuccess() )
         {
-            _logger.LogWarning( $"ConvertPlayerId failed: {errorCode}" );
-            return ( errorCode, 0 );
+            _logger.LogWarning( $"ConvertPlayerId failed: {getCacheResult}" );
+            return ( getCacheResult, 0 );
         }
 
-        return ( ErrorCode.None, userId );
+        return ( ErrorCode.None, dbUserId );
+    }
+
+    public async Task< ErrorCode > CachePlayer( long userId, string nickName, string token )
+    {
+        var errorCode = await _memoryDB.CachePlayer( userId, nickName, token );
+        return errorCode;
     }
 }
 
