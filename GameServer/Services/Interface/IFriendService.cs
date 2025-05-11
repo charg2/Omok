@@ -5,8 +5,10 @@ namespace GameServer.Services.Interface;
 
 public interface IFriendService
 {
-    public Task< ErrorCode > AddFriend( long userId, long friendId );
-    public Task< ErrorCode > RemoveFriend( long userId, long friendId );
-    public Task< ( ErrorCode, List< FriendModel > ) > ReadFriendList( long userId );
+    Task< ErrorCode > InviteFriend( long userId, long friendId );
+    Task< ErrorCode > AcceptFriend( long userId, long friendId );
+
+    Task< ErrorCode > RemoveFriend( long userId, long friendId );
+    Task< ( ErrorCode, List< FriendModel > ) > ReadFriendList( long userId );
 
 }

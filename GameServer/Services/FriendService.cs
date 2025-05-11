@@ -16,9 +16,14 @@ public class FriendService : IFriendService
         _gameDB = gameDB;
     }
 
-    public async Task< ErrorCode > AddFriend( long userId, long friendId )
+    public async Task< ErrorCode > InviteFriend( long userId, long friendId )
     {
-        return await _gameDB.AddFriend( userId, friendId );
+        return await _gameDB.InviteFriend( userId, friendId );
+    }
+
+    public async Task< ErrorCode > AcceptFriend( long userId, long friendId )
+    {
+        return await _gameDB.AcceptFriend( userId, friendId );
     }
 
     public async Task< ErrorCode > RemoveFriend( long userId, long friendId )

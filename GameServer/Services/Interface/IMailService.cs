@@ -13,7 +13,7 @@ public record class SendMailParam
 
 public interface IMailService
 {
-    public Task< ErrorCode > SendMail( SendMailParam param );
+    Task< ErrorCode > SendMail( SendMailParam param );
 
-    public Task< ( ErrorCode, List< MailModel > ) > ReadMailList( long lastReadMailId, int lastReadMailId1 );
+    Task< ( ErrorCode, List< MailModel > ) > ReadMailList( long lastReadMailId, int lastReadMailId1 );
 }

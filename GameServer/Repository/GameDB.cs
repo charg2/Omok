@@ -2,6 +2,7 @@ using GameServer.Model;
 using GameServer.Services.Interface;
 using Microsoft.Extensions.Options;
 using MySqlConnector;
+using Pipelines.Sockets.Unofficial.Buffers;
 using Shared;
 using SqlKata.Compilers;
 using SqlKata.Execution;
@@ -10,7 +11,7 @@ using System.Data;
 namespace GameServer.Repository;
 
 
-public class GameDB : IGameDB
+public partial class GameDB : IGameDB
 {
     private readonly IOptions< DBConfig > _dbConfig;
     private IDbConnection? _dbConn;
@@ -95,7 +96,7 @@ public class GameDB : IGameDB
         }
     }
 
-    public async Task< ( ErrorCode, long playerId ) > GetUserIdUsingNickName( string nickName )
+    public async Task< ( ErrorCode, long userId ) > GetUserIdUsingNickName( string nickName )
     {
         try
         {
@@ -163,31 +164,10 @@ public class GameDB : IGameDB
         }
     }
 
-    public async Task< ErrorCode > AddFriend( long ownerId, long friendId )
-    {
-        try
-        {
-            var affectedRows = await _queryFactory.Query( "friend" )
-                .InsertAsync( new
-                {
-                    owner_id = ownerId,
-                    friend_id = friendId,
-                    status = EFriendStatus.Request,
-                } );
-            if ( affectedRows < 1 )
-            {
-                _logger.LogError( $"DB Error Occur!" );
-                return ErrorCode.GamePlayerAlreadyExists;
-            }
-            return ErrorCode.None;
-        }
-        catch ( Exception ex )
-        {
-            _logger.LogError( $"DB Query Error Occur! Reason: {ex.Message}\n {ex.StackTrace}" );
-            return ErrorCode.UnknownError;
-        }
-    }
+}
 
+public partial class GameDB : IGameDB
+{
     public async Task< ErrorCode > RemoveFriend( long ownerId, long friendId )
     {
         try
@@ -230,5 +210,97 @@ public class GameDB : IGameDB
         }
     }
 
+    public async Task< ErrorCode > InviteFriend( long userId, long friendId )
+    {
+        try
+        {
+            using var tx = _dbConn!.BeginTransaction();
 
+            var affectedRows1 = await _queryFactory.Query( "friend" )
+                .InsertAsync( new
+                {
+                    owner_id  = userId,
+                    friend_id = friendId,
+                    status = EFriendStatus.Invite,
+                },
+                tx );
+            if ( affectedRows1 < 1 )
+            {
+                tx.Rollback();
+                _logger.LogError( $"DB Error Occur!" );
+                return ErrorCode.GamePlayerAlreadyExists;
+            }
+
+            var affectedRows2 = await _queryFactory.Query( "friend" )
+                .InsertAsync( new
+                {
+                    owner_id  = friendId,
+                    friend_id = userId,
+                    status = EFriendStatus.Inviting,
+                },
+                tx );
+            if ( affectedRows2 < 1 )
+            {
+                tx.Rollback();
+                _logger.LogError( $"DB Error Occur!" );
+                return ErrorCode.GamePlayerAlreadyExists;
+            }
+
+            tx.Commit();
+            return ErrorCode.None;
+        }
+        catch ( Exception ex )
+        {
+            _logger.LogError( $"DB Query Error Occur! Reason: {ex.Message}\n {ex.StackTrace}" );
+            return ErrorCode.UnknownError;
+        }
+    }
+
+    public async Task< ErrorCode > AcceptFriend( long ownerId, long friendId )
+    {
+        try
+        {
+            using var tx = _dbConn!.BeginTransaction();
+
+            var affectedRows1 = await _queryFactory.Query( "friend" )
+                .Where( "owner_id", ownerId )
+                .Where( "friend_id", friendId )
+                .Where( "status", EFriendStatus.Inviting )
+                .UpdateAsync( new
+                {
+                    status = EFriendStatus.Mutual,
+                    accept_time = DateTime.Now
+                } );
+            if ( affectedRows1 < 1 )
+            {
+                tx.Rollback();
+                _logger.LogError( $"DB Error Occur!" );
+                return ErrorCode.GamePlayerAlreadyExists;
+            }
+
+            var affectedRows2 = await _queryFactory.Query( "friend" )
+                .Where( "owner_id", friendId )
+                .Where( "friend_id", ownerId )
+                .Where( "status", EFriendStatus.Invite )
+                .UpdateAsync( new
+                {
+                    status = EFriendStatus.Mutual,
+                    accept_time = DateTime.Now
+                } );
+            if ( affectedRows2 < 1 )
+            {
+                tx.Rollback();
+                _logger.LogError( $"DB Error Occur!" );
+                return ErrorCode.GamePlayerAlreadyExists;
+            }
+
+            tx.Commit();
+            return ErrorCode.None;
+        }
+        catch ( Exception ex )
+        {
+            _logger.LogError( $"DB Query Error Occur! Reason: {ex.Message}\n {ex.StackTrace}" );
+            return ErrorCode.UnknownError;
+        }
+    }
 }

@@ -4,8 +4,8 @@ namespace GameServer.Services.Interface;
 
 public interface IAuthService
 {
-    public Task< ( ErrorCode, long ) > VerifyToken( string account, string token );
+    Task< ( ErrorCode, long ) > VerifyToken( string account, string token );
 
-    public Task< ( ErrorCode, long userId ) > VerifyTokenAndGetUserId( string account, string token );
+    Task< ( ErrorCode, long userId ) > VerifyTokenAndGetUserId( string account, string token );
 
 }

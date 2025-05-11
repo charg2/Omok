@@ -1,5 +1,7 @@
 using GameServer.DTO;
+using GameServer.Repository;
 using GameServer.Services.Interface;
+using FakeHiveServer.Services;
 using Microsoft.AspNetCore.Mvc;
 using Shared;
 
@@ -7,14 +9,14 @@ namespace GameServer.Controllers;
 
 [ApiController]
 [Route( "api/[controller]" )]
-public class RemoveFriendController : ControllerBase
+public class InviteFriendController : ControllerBase
 {
-    private readonly ILogger< RemoveFriendController > _logger;
+    private readonly ILogger< InviteFriendController > _logger;
     private readonly IFriendService _friendService;
     private readonly IPlayerService _playerService;
     private readonly IAuthService _authService;
 
-    public RemoveFriendController( ILogger< RemoveFriendController > logger, IFriendService friendService, IPlayerService playerService, IAuthService authService )
+    public InviteFriendController( ILogger< InviteFriendController > logger, IFriendService friendService, IPlayerService playerService, IAuthService authService )
     {
         _logger = logger;
         _playerService = playerService;
@@ -23,23 +25,29 @@ public class RemoveFriendController : ControllerBase
     }
 
     [HttpPost]
-    public async Task< RemoveFriendRes > Post( [FromBody] RemoveFriendReq request )
+    public async Task< InviteFriendRes > Post( [FromBody] InviteFriendReq request )
     {
         var ( verifyResult, userId ) = await _authService.VerifyToken( request.Account, request.Token );
         if ( !verifyResult.IsSuccess() )
         {
-            _logger.LogWarning( $"Add Friend Auth Failed: {verifyResult}" );
+            _logger.LogWarning( $"Invite Friend Auth Failed: {verifyResult}" );
             return new() { Error = verifyResult };
         }
 
         var ( getResult, friendId ) = await _playerService.GetUserIdUsingNickName( request.FriendName );
         if ( !getResult.IsSuccess() )
         {
-            _logger.LogWarning( $"Add Friend GetUserId Failed: {getResult}" );
+            _logger.LogWarning( $"Invite Friend GetUserId Failed: {getResult}" );
             return new(){ Error = getResult };
         }
 
-        var removeResult = await _friendService.RemoveFriend( userId, friendId );
-        return new(){ Error = removeResult };
+        var inviteResult = await _friendService.InviteFriend( userId, friendId );
+        if ( !inviteResult.IsSuccess() )
+        {
+            _logger.LogWarning( $"Invite Friend Failed: {inviteResult}" );
+            return new(){ Error = inviteResult };
+        }
+
+        return new(){};
     }
 }

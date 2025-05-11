@@ -7,15 +7,15 @@ namespace GameServer.Repository;
 
 public interface IGameDB : IDisposable
 {
-    public Task< ErrorCode > CreatePlayer( long userId, string nickName );
-    public Task< ( ErrorCode, long playerId ) > GetUserIdUsingNickName( string receiver );
-    public Task< ( ErrorCode, PlayerModel ) > LoadPlayer( long userId );
+    Task< ErrorCode > CreatePlayer( long userId, string nickName );
+    Task< ( ErrorCode, long userId ) > GetUserIdUsingNickName( string receiver );
+    Task< ( ErrorCode, PlayerModel ) > LoadPlayer( long userId );
 
-    public Task< ErrorCode > CreateMail( SendMailParam param );
-    public Task< ( ErrorCode, List< MailModel > ) > ReadMailList( long userId, int lastReadMailId );
+    Task< ErrorCode > CreateMail( SendMailParam param );
+    Task< ( ErrorCode, List< MailModel > ) > ReadMailList( long userId, int lastReadMailId );
 
-    public Task< ErrorCode > AddFriend( long ownerId, long friendId );
-    public Task< ErrorCode > RemoveFriend( long ownerId, long friendId );
-    public Task< ( ErrorCode, List< FriendModel > ) > ReadFriendList( long userId );
-
+    Task< ErrorCode > AcceptFriend( long ownerId, long friendId );
+    Task< ErrorCode > RemoveFriend( long ownerId, long friendId );
+    Task< ( ErrorCode, List< FriendModel > ) > ReadFriendList( long userId );
+    Task< ErrorCode > InviteFriend( long userId, long friendId );
 }

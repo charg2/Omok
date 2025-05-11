@@ -54,8 +54,8 @@ Content-Type: application/json
   "LastReadMailId":8
 }
 
-### 친구 추가
-POST {{GameServer_HostAddress}}/AddFriend/
+### 친구 초대
+POST {{GameServer_HostAddress}}/InviteFriend/
 Content-Type: application/json
 
 {
@@ -63,6 +63,17 @@ Content-Type: application/json
   "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test",
   "FriendName":"엄준식"
 }
+
+### 친구 수락
+POST {{GameServer_HostAddress}}/AcceptFriend/
+Content-Type: application/json
+
+{
+  "Account":"mlt",
+  "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test",
+  "FriendName":"마라로제뉴진스"
+}
+
 
 ### 친구 목록 읽기
 POST {{GameServer_HostAddress}}/ReadFriendList/
@@ -73,8 +84,8 @@ Content-Type: application/json
   "Token":"test_test|test_test|test_test|test_test|test_test|test_test|test"
 }
 
-### 매칭 요청
-POST {{GameServer_HostAddress}}/RequestMatching/
+### 매칭 시작
+POST {{GameServer_HostAddress}}/StartMatch/
 Content-Type: application/json
 
 {

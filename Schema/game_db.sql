@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS friend
   `owner_id` BIGINT,
   `friend_id` BIGINT,
   `status` TINYINT,
-  `add_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
+  `invite_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `accept_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY ( `owner_id`, `friend_id` )
 );
 

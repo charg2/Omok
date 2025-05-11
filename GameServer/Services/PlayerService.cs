@@ -35,17 +35,17 @@ public class PlayerService : IPlayerService
         return errorCode;
     }
 
-    public async Task< ( ErrorCode, long playerId ) > GetUserIdUsingNickName( string receiverNickName )
+    public async Task< ( ErrorCode, long userId ) > GetUserIdUsingNickName( string receiverNickName )
     {
         var ( getCacheResult, cacheUserId ) = await _memoryDB.GetUserIdUsingNickName( receiverNickName );
         if ( cacheUserId != 0 )
             return ( ErrorCode.None, cacheUserId );
 
         var ( getDBError, dbUserId ) = await _gameDB.GetUserIdUsingNickName( receiverNickName );
-        if ( !getCacheResult.IsSuccess() )
+        if ( !getDBError.IsSuccess() )
         {
-            _logger.LogWarning( $"ConvertPlayerId failed: {getCacheResult}" );
-            return ( getCacheResult, 0 );
+            _logger.LogWarning( $"Get UserId Failed: {getDBError}" );
+            return ( getDBError, 0 );
         }
 
         return ( ErrorCode.None, dbUserId );

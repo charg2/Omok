@@ -21,9 +21,6 @@ public class RefreshTokenController : ControllerBase
     public async Task< VerifyTokenRes > Post( [FromBody] VerifyTokenReq request )
     {
         var ( verifyResult, userId ) = await _authService.VerifyToken( request.Account, request.Token );
-
-        _logger.LogInformation( $"Verifying token for user {request.Account}" );
-
         return new()
         {
             Account = request.Account,
